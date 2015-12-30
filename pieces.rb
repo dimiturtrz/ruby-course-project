@@ -1,34 +1,34 @@
 require_relative "constants.rb"
 module Piece
-  def initialize(starting_position, color, abbreviation)
+  def initialize(starting_position, color, sign)
     @x = starting_position.first
     @y = starting_position.last
     @color = color
     @moves = 0
-    @abbreviation = abbreviation
+    @sign = sign
   end
 end
 
 module PluralPiece
   include Piece
-  def initialize(starting_position, color, piece_number, abbreviation)
-    super starting_position, color, abbreviation
+  def initialize(starting_position, color, piece_number, sign)
+    super starting_position, color, sign
     @piece_number = piece_number
   end
 
   def to_s
-    "#{@color[0].upcase}#{@abbreviation}#{@piece_number}"
+    "#{@sign} #{@piece_number}"
   end
 end
 
 module SingularPiece
   include Piece
-  def initialize(starting_position, color, abbreviation)
-    super starting_position, color, abbreviation
+  def initialize(starting_position, color, sign)
+    super starting_position, color, sign
   end
 
   def to_s
-    "#{@color[0].upcase}#{@abbreviation} "
+    " #{@sign} "
   end
 end
 
@@ -36,7 +36,8 @@ class Pawn
   include PluralPiece
   def initialize(starting_position, color)
     pawn_number = (LETTERS.index starting_position.first) + 1
-    super starting_position, color, pawn_number, "P"
+    sign = (color == :white ? '♙' : '♟')
+    super starting_position, color, pawn_number, sign
   end
 
   def move(destination)
@@ -49,7 +50,8 @@ class Rook
   def initialize(starting_position, color)
     letter = LETTERS[ROOK_INDENTATION]
     rook_number = starting_position.first == letter ? 1 : 2
-    super starting_position, color, rook_number, "R"
+    sign = (color == :white ? '♖' : '♜')
+    super starting_position, color, rook_number, sign
   end
 
   def move
@@ -62,7 +64,8 @@ class Knight
   def initialize(starting_position, color)
     letter = LETTERS[KNIGHT_INDENTATION]
     knight_number = starting_position.first == letter ? 1 : 2
-    super starting_position, color, knight_number, "K"
+    sign = (color == :white ? '♘' : '♞')
+    super starting_position, color, knight_number, sign
   end
 
   def move
@@ -75,7 +78,8 @@ class Bishop
   def initialize(starting_position, color)
     letter = LETTERS[BISHOP_INDENTATION]
     bishop_number = starting_position.first == letter ? 1 : 2
-    super starting_position, color, bishop_number, "B"
+    sign = (color == :white ? '♗' : '♝')
+    super starting_position, color, bishop_number, sign
   end
 
   def move
@@ -86,7 +90,8 @@ end
 class Queen
   include SingularPiece
   def initialize(starting_position, color)
-    super starting_position, color, "Q"
+    sign = (color == :white ? '♕' : '♛')
+    super starting_position, color, sign
   end
 
   def move
@@ -97,7 +102,8 @@ end
 class King
   include SingularPiece
   def initialize(starting_position, color)
-    super starting_position, color, "K"
+    sign = (color == :white ? '♔' : '♚')
+    super starting_position, color, sign
   end
 
   def move

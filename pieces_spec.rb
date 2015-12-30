@@ -40,6 +40,6 @@ describe Pawn do
   end
 
   it "should return correct string representation the pawn" do
-    expect(Pawn.new([:d, 3], :black).to_s).to eq("BP4")
+    expect(Pawn.new([:d, 3], :black).to_s).to eq("♟ 4")
   end
 end

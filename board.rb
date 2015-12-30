@@ -60,7 +60,7 @@ class Board
 
   def print()
     @board.values.transpose.each_with_index do |row, index|
-      puts "#{index+1}  #{row.map(&:to_s).join('|')}"
+      puts "#{index+1}  #{row.map(&:to_s).join('│')}"
     end
     puts "    #{LETTERS.map(&:upcase).join('   ')}"
   end
