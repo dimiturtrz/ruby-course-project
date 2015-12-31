@@ -12,3 +12,6 @@ KNIGHT_INDENTATION = 1
 BISHOP_INDENTATION = 2
 QUEEN_INDENTATION = 3
 KING_INDENTATION = 4
+# how can pieces move
+DIRECTIONS = :diagonal, :straight
+MOVEMENT_LIMITS = true, false # true = 1, false = no limits

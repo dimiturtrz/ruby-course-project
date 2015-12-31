@@ -1,11 +1,33 @@
 require_relative "constants.rb"
 module Piece
   def initialize(starting_position, color, sign)
-    @x = starting_position.first
-    @y = starting_position.last
+    @letter = starting_position.first # coordinates x
+    @number = starting_position.last #coordinates y
     @color = color
     @moves = 0
     @sign = sign
+  end
+
+  def move(dest_letter, dest_number, direction, limited)
+    curr_column, dest_column = LETTERS.index @letter, LETTERS.index dest_letter
+    direction_check curr_column, dest_column, dest_number, direction
+    limits_check curr_column, dest_column, dest_number, limited
+  end
+
+  def direction_check(curr_column, dest_column, dest_number, direction)
+    straight = (curr_column == dest_column || @number == dest_number)
+    diagonal = ((curr_column - dest_column).abs == (@number - dest_number).abs)
+    return straight if direction == :straight
+    return diagonal if direction == :diagonal
+    return straight || diagonal if direction == :both
+  end
+
+  def limits_check(curr_column, dest_letter, dest_number, limited)
+    letter_distance = (curr_column - dest_column).abs
+    number_distance = (@number - dest_number).abs
+    more_than_one_sqare = (letter_distance > 1) || (number_distance > 1)
+    distance_limit_breached = more_than_one_sqare && limited
+    !distance_limit_breached
   end
 end
 
@@ -54,8 +76,8 @@ class Rook
     super starting_position, color, rook_number, sign
   end
 
-  def move
-
+  def move(dest_letter, dest_number, board)
+    
   end
 end
 
