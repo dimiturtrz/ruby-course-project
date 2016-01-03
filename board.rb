@@ -8,6 +8,10 @@ class Board
     place_player_pieces :black
   end
 
+  def get_square(coordinates)
+    @board[coordinates.first][coordinates.last]
+  end
+
   def place_player_pieces(color)
     place_player_pawns color
     place_player_rooks color

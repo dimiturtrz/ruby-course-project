@@ -1,5 +1,4 @@
-require_relative 'board'
-require_relative 'pieces'
+require_relative "board"
 
 board = Board.new()
 board.print()
