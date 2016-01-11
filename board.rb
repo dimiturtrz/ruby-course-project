@@ -3,9 +3,10 @@ require_relative "pieces"
 class Board
   def initialize()
     @board = Hash.new
-    LETTERS.each{|letter| @board[letter] = Array.new(NUMBERS.size, "   ")}
+    @pieces = Array.new
     place_player_pieces :white
     place_player_pieces :black
+    refresh
   end
 
   def get_square(coordinates)
@@ -24,7 +25,7 @@ class Board
   def place_player_pawns(color)
     LETTERS.each do |letter|
       number = (color == :white ? PAWNS_ROW - 1 : NUMBERS.size - PAWNS_ROW)
-      @board[letter][number] = Pawn.new([letter, number], color)
+      @pieces.push Pawn.new([letter, number], color)
     end
   end
 
@@ -45,27 +46,38 @@ class Board
     elite_class = eval("#{elite_name}".capitalize)
     elite_indentation = eval("#{elite_name}_indentation".upcase)
     letter = LETTERS[elite_indentation]
-    @board[letter][number] = elite_class.new([letter, number], color)
+    @pieces.push elite_class.new([letter, number], color)
     letter = LETTERS[-elite_indentation - 1]
-    @board[letter][number] = elite_class.new([letter, number], color)
+    @pieces.push elite_class.new([letter, number], color)
   end
 
   def place_player_queen(color)
     letter = LETTERS[color == :white ? QUEEN_INDENTATION : KING_INDENTATION]
     number = (color == :white ? ELITES_ROW - 1 : NUMBERS.size - ELITES_ROW)
-    @board[letter][number] = Queen.new([letter, number], color)
+    @pieces.push Queen.new([letter, number], color)
   end
 
   def place_player_king(color)
     letter = LETTERS[color == :white ? KING_INDENTATION : QUEEN_INDENTATION]
     number = (color == :white ? ELITES_ROW - 1 : NUMBERS.size - ELITES_ROW)
-    @board[letter][number] = King.new([letter, number], color)
+    @pieces.push King.new([letter, number], color)
+  end
+
+  def refresh
+    clear
+    @pieces.each do |piece|
+      @board[piece.letter][piece.number] = piece unless piece.taken?
+    end
+  end
+
+  def clear
+    LETTERS.each{ |letter| @board[letter] = Array.new(NUMBERS.size, " " * 3)}
   end
 
   def print()
     @board.values.transpose.each_with_index do |row, index|
       puts "#{index+1}  #{row.map(&:to_s).join('│')}"
     end
-    puts "    #{LETTERS.map(&:upcase).join('   ')}"
+    puts "#{' ' * (3 + 1)}#{LETTERS.map(&:upcase).join(' ' * 3)}"
   end
 end

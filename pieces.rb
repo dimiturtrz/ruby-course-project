@@ -1,82 +1,5 @@
 require_relative "constants"
-module Piece
-  def initialize(starting_position, color, sign)
-    @letter = starting_position.first # coordinates x
-    @number = starting_position.last # coordinates y
-    @color = color
-    @moves = 0
-    @sign = sign
-  end
-
-  def move(dest_letter, dest_number, move_pattern, limited, board)
-    curr_column = LETTERS.index(@letter)
-    dest_column = LETTERS.index(dest_letter)
-    direction_check curr_column, dest_column, dest_number, move_pattern
-    limits_check curr_column, dest_column, dest_number, limited
-    obstructions_check curr_column, dest_column, dest_number, board
-  end
-
-  def direction_check(curr_column, dest_column, dest_number, move_pattern)
-    straight = (curr_column == dest_column || @number == dest_number)
-    diagonal = ((curr_column - dest_column).abs == (@number - dest_number).abs)
-    return straight if move_pattern == :straight
-    return diagonal if move_pattern == :diagonal
-    return straight || diagonal if move_pattern == :both
-  end
-
-  def limits_check(curr_column, dest_column, dest_number, limited)
-    letter_distance = (curr_column - dest_column).abs
-    number_distance = (@number - dest_number).abs
-    more_than_one_sqare = (letter_distance > 1) || (number_distance > 1)
-    distance_limit_breached = more_than_one_sqare && limited
-    !distance_limit_breached
-  end
-
-  def obstructions_check(curr_column, dest_column, dest_number, board)
-    squares = get_squares_to_pass(curr_column, dest_column, dest_number)
-    squares.each do |square|
-      p board.get_square(square) if board.get_square(square).is_a? Piece
-    end
-    true
-  end
-
-  def get_squares_to_pass(curr_column, dest_column, dest_number)
-    col_range = get_range(curr_column, dest_column)
-    num_range = get_range(@number, dest_number)
-    columns = col_range.size > 1 ? col_range.to_a : Array.new(num_range.size, curr_column)
-    numbers = num_range.size > 1 ? num_range.to_a : Array.new(col_range.size, @number)
-    letters = columns.map {|column| LETTERS[column]}
-    [letters.drop(1), numbers.drop(1)].transpose
-  end
-
-  def get_range(curr, dest)
-    curr > dest ? curr.downto(dest).to_a : (curr..dest).to_a
-  end
-end
-
-module PluralPiece
-  include Piece
-  def initialize(starting_position, color, piece_number, sign)
-    super starting_position, color, sign
-    @piece_number = piece_number
-  end
-
-  def to_s
-    "#{@sign} #{@piece_number}"
-  end
-end
-
-module SingularPiece
-  include Piece
-  def initialize(starting_position, color, sign)
-    super starting_position, color, sign
-  end
-
-  def to_s
-    " #{@sign} "
-  end
-end
-
+require_relative "piece_base"
 class Pawn
   include PluralPiece
   def initialize(starting_position, color)
@@ -85,8 +8,32 @@ class Pawn
     super starting_position, color, pawn_number, sign
   end
 
-  def move(destination)
-    
+  def move(dest, board)
+    return moving_back_error if moving_back?(dest.last)
+    if destination_check LETTERS.index(@letter), LETTERS.index(dest.first),
+                         dest.first, :diagonal
+      final_square = can_move(dest.first, dest.last, :diagonal, true, board)
+      return false unless final_piece
+      return no_piece_error unless final_square.kind_of? Piece
+      final_square.get_taken
+    else
+      return false unless can_move(dest.first, dest.last, :straight, true, board)
+    end
+    super dest
+  end
+
+  def moving_back?(dest_number)
+    color == :white ? @number < dest_number : @number > dest_number
+  end
+
+  def moving_back_error
+    p "pawns can't move backwards"
+    false
+  end
+
+  def no_piece_error
+    p "there ain't no piece there"
+    false
   end
 end
 
@@ -99,8 +46,11 @@ class Rook
     super starting_position, color, rook_number, sign
   end
 
-  def move(dest_letter, dest_number, board)
-    super(dest_letter, dest_number, :straight, false, board)
+  def move(dest, board)
+    final_square = can_move dest.first, dest.last, :straight, false, board
+    return false unless final_square
+    final_square.get_taken if final_square.kind_of? Piece
+    super dest
   end
 end
 
@@ -127,8 +77,11 @@ class Bishop
     super starting_position, color, bishop_number, sign
   end
 
-  def move
-
+  def move(dest, board)
+    final_square = can_move dest.first, dest.last, :diagonal, false, board
+    return false unless final_square
+    final_square.get_taken if final_square.kind_of? Piece
+    super dest
   end
 end
 
@@ -139,8 +92,11 @@ class Queen
     super starting_position, color, sign
   end
 
-  def move
-
+  def move(dest, board)
+    final_square = can_move dest.first, dest.last, :both, false, board
+    return false unless final_square
+    final_square.get_taken if final_square.kind_of? Piece
+    super dest
   end
 end
 
@@ -151,7 +107,10 @@ class King
     super starting_position, color, sign
   end
 
-  def move
-
+  def move(dest, board)
+    final_square = can_move dest.first, dest.last, :both, true, board
+    return false unless final_square
+    final_square.get_taken if final_square.kind_of? Piece
+    super dest
   end
 end
