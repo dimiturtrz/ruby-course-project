@@ -9,10 +9,6 @@ class Board
     refresh
   end
 
-  def get_square(coordinates)
-    @board[coordinates.first][coordinates.last]
-  end
-
   def place_player_pieces(color)
     place_player_pawns color
     place_player_rooks color
@@ -63,6 +59,18 @@ class Board
     @pieces.push King.new([letter, number], color)
   end
 
+  def get_square(coordinates)
+    @board[coordinates.first][coordinates.last]
+  end
+
+  def move piece_str, dest
+    piece_to_move = @pieces.find do |piece|
+      piece.abbreviation == piece_str && piece.color == :black
+    end
+    piece_to_move.move [dest[0].downcase.to_sym, dest[1].to_i - 1], self
+    refresh
+  end
+
   def refresh
     clear
     @pieces.each do |piece|
@@ -74,10 +82,15 @@ class Board
     LETTERS.each{ |letter| @board[letter] = Array.new(NUMBERS.size, " " * 3)}
   end
 
-  def print()
+  def to_s
+    string = ""
     @board.values.transpose.each_with_index do |row, index|
-      puts "#{index+1}  #{row.map(&:to_s).join('│')}"
+      string += "#{index+1}  #{row.map(&:to_s).join('│')}\n"
     end
-    puts "#{' ' * (3 + 1)}#{LETTERS.map(&:upcase).join(' ' * 3)}"
+    string += "#{' ' * (3 + 1)}#{LETTERS.map(&:upcase).join(' ' * 3)}\n"
+  end
+
+  def print
+    puts to_s
   end
 end

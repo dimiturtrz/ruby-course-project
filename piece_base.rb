@@ -1,17 +1,18 @@
 require_relative "constants"
 module Piece
-  def initialize(starting_position, color, sign)
+  def initialize(starting_position, color, sign, abbreviation)
     @letter = starting_position.first # coordinates x
     @number = starting_position.last # coordinates y
     @color = color
     @moves = 0
     @sign = sign
+    @abbreviation = abbreviation
     @taken = false
   end
 
   def can_move(dest_letter, dest_number, move_pattern, limited, board)
-    curr_column = LETTERS.index(@letter)
-    dest_column = LETTERS.index(dest_letter)
+    curr_column = LETTERS.index @letter
+    dest_column = LETTERS.index dest_letter
     unless direction_check curr_column, dest_column, dest_number, move_pattern
       return direction_error 
     end
@@ -58,17 +59,17 @@ module Piece
   end
 
   def direction_error
-    p "wrong direction. ye drunk?"
+    p "wrong direction. ye drunk?" if $errors_enabled
     false
   end
 
   def limits_error
-    p "that's it, you've crossed the line"
+    p "that's it, you've crossed the line" if $errors_enabled
     false
   end
 
   def obstruction_error
-    p "nuh-uh theres a bloke in the way"
+    p "nuh-uh theres a bloke in the way" if $errors_enabled
     false
   end
 
@@ -79,6 +80,7 @@ module Piece
   def move(destination)
     @letter = destination.first
     @number = destination.last
+    @moves += 1
   end
 
   def get_taken
@@ -93,15 +95,27 @@ module Piece
     @number
   end
 
+  def color
+    @color
+  end
+
   def taken?
     @taken
+  end
+  
+  def abbreviation
+    @abbreviation
+  end
+
+  def moves
+    @moves
   end
 end
 
 module PluralPiece
   include Piece
-  def initialize(starting_position, color, piece_number, sign)
-    super starting_position, color, sign
+  def initialize(starting_position, color, piece_number, sign, abbreviation)
+    super starting_position, color, sign, abbreviation
     @piece_number = piece_number
   end
 
@@ -112,8 +126,8 @@ end
 
 module SingularPiece
   include Piece
-  def initialize(starting_position, color, sign)
-    super starting_position, color, sign
+  def initialize(starting_position, color, sign, abbreviation)
+    super starting_position, color, sign, abbreviation
   end
 
   def to_s
