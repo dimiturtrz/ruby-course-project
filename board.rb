@@ -67,6 +67,10 @@ class Board
     @pieces.find{|piece| piece.color == color && piece.kind_of?(King) }
   end
 
+  def king_threatened?(color)
+    get_king(color).threatened?(self)
+  end
+
   def get_pieces
     @pieces
   end
@@ -75,7 +79,7 @@ class Board
     piece_to_move = @pieces.find do |piece|
       piece.abbreviation == piece_str && piece.color == color
     end
-    return piece_to_move.move [dest[0].downcase.to_sym, dest[1].to_i - 1], self
+    piece_to_move.move [dest[0].downcase.to_sym, dest[1].to_i - 1], self
   end
 
   def refresh

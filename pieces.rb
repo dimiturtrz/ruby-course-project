@@ -165,9 +165,9 @@ class King
 
   def threatened?(board)
     pieces = board.get_pieces.reject{ |piece| piece.color == @color }
-    pieces.each do |piece|
-      return true if piece.can_move([@letter, @number], board)
-    end
-    false
+    disable_errors
+    threats = pieces.find{ |piece| piece.can_move([@letter, @number], board) }
+    enable_errors
+    !threats.nil?
   end
 end

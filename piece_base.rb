@@ -83,9 +83,16 @@ module Piece
   end
 
   def move(destination)
-    @letter = destination.first
-    @number = destination.last
+    @last_letter, @letter = @letter, destination.first
+    @last_number, @number = @number, destination.last
     @moves += 1
+    self
+  end
+
+  def reverse_move
+    @letter = @last_letter
+    @number = @last_number
+    @moves -= 1
   end
 
   def get_taken_by(taker)
