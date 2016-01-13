@@ -47,9 +47,6 @@ describe Piece do
       it "should return the last square" do
         expect(piece.obstructions_check(4, 1, 1, board).to_s).to eq("♟ 2")
       end
-    end
-
-    describe "#obstructions_check" do
       it "should return false if there's a piece in the way" do
         expect(piece.obstructions_check(4, 0, 0, board)).to be false
       end
