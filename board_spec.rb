@@ -16,4 +16,8 @@ describe Board do
     A   B   C   D   E   F   G   H
 EOS
   end
+
+  it "should find king by color" do
+    expect(board.get_king :black).to eq(board.get_square([:d, 7]))
+  end
 end

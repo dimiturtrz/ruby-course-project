@@ -63,12 +63,19 @@ class Board
     @board[coordinates.first][coordinates.last]
   end
 
-  def move piece_str, dest
+  def get_king(color)
+    @pieces.find{|piece| piece.color == color && piece.kind_of?(King) }
+  end
+
+  def get_pieces
+    @pieces
+  end
+
+  def move piece_str, dest, color
     piece_to_move = @pieces.find do |piece|
-      piece.abbreviation == piece_str && piece.color == :black
+      piece.abbreviation == piece_str && piece.color == color
     end
-    piece_to_move.move [dest[0].downcase.to_sym, dest[1].to_i - 1], self
-    refresh
+    return piece_to_move.move [dest[0].downcase.to_sym, dest[1].to_i - 1], self
   end
 
   def refresh
@@ -92,5 +99,11 @@ class Board
 
   def print
     puts to_s
+  end
+
+  #only for testing !!!
+  def add_piece piece
+    @pieces.push piece
+    piece
   end
 end

@@ -15,26 +15,25 @@ class Pawn
       final_square = super dest.first, dest.last, :diagonal, true, board
       return diagonal_move dest, board, final_square
     else
-      normal_movement = super dest.first, dest.last, :straight, true, board
-      return straight_move dest, board, normal_movement
+      return true if first_turn_movement dest, board
+      super(dest.first, dest.last, :straight, true, board).to_s == " " * 3
     end
   end
 
   def diagonal_move(dest, board, final_square)
     return false unless final_square
     return no_piece_error unless final_square.kind_of? Piece
-    final_square.get_taken
+    final_square.get_taken_by self
     true
   end
 
-  def straight_move(dest, board, normal_movement)
+  def first_turn_movement(dest, board)
     first_move = moves == 0
     same_column = dest.first == @letter
     two_numbers_forth = (dest.last - @number).abs == 2
     first_turn_movement = first_move && same_column && two_numbers_forth
-    unoccupied = board.get_square(dest) == " " * 3
-    return false unless normal_movement || (first_turn_movement && unoccupied)
-    true
+    dest_unoccupied = board.get_square(dest) == " " * 3
+    first_turn_movement && dest_unoccupied
   end
 
   def move(dest, board)
@@ -72,7 +71,7 @@ class Rook
   def move(dest, board)
     final_square = can_move dest, board
     return false unless final_square
-    final_square.get_taken if final_square.kind_of? Piece
+    final_square.get_taken_by self if final_square.kind_of? Piece
     super dest
   end
 end
@@ -86,7 +85,7 @@ class Knight
     super starting_position, color, knight_number, sign, "H#{knight_number}"
   end
 
-  def can_move dest
+  def can_move dest, board
     dest_letter, dest_number = dest
     vertical = (LETTERS.index(@letter) - LETTERS.index(dest_letter)).abs 
     horizontal = (dest_number - @number).abs
@@ -94,9 +93,9 @@ class Knight
   end
 
   def move(dest, board)
-    return knight_error unless can_move dest
+    return knight_error unless can_move dest, board
     final_square = board.get_square dest
-    final_square.get_taken if final_square.kind_of? Piece
+    final_square.get_taken_by self if final_square.kind_of? Piece
     super dest
   end
 
@@ -122,7 +121,7 @@ class Bishop
   def move(dest, board)
     final_square = can_move dest, board
     return false unless final_square
-    final_square.get_taken if final_square.kind_of? Piece
+    final_square.get_taken_by self if final_square.kind_of? Piece
     super dest
   end
 end
@@ -141,7 +140,7 @@ class Queen
   def move(dest, board)
     final_square = can_move dest, board
     return false unless final_square
-    final_square.get_taken if final_square.kind_of? Piece
+    final_square.get_taken_by self if final_square.kind_of? Piece
     super dest
   end
 end
@@ -160,7 +159,15 @@ class King
   def move(dest, board)
     final_square = can_move dest, board
     return false unless final_square
-    final_square.get_taken if final_square.kind_of? Piece
+    final_square.get_taken_by self if final_square.kind_of? Piece
     super dest
+  end
+
+  def threatened?(board)
+    pieces = board.get_pieces.reject{ |piece| piece.color == @color }
+    pieces.each do |piece|
+      return true if piece.can_move([@letter, @number], board)
+    end
+    false
   end
 end

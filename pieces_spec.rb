@@ -47,15 +47,15 @@ describe Knight do
     let(:knight) { Knight.new([:d, 5], :white) }
 
     it "should be able to take the queen" do
-      expect(knight.can_move([:e, 7])). to be true
+      expect(knight.can_move([:e, 7], board)). to be true
     end
 
     it "should be able to take pawn 6" do
-      expect(knight.can_move([:f, 6])). to be true
+      expect(knight.can_move([:f, 6], board)). to be true
     end
 
     it "should be unable to go wherever he likes" do
-      expect(knight.can_move([:a, 6])). to be false
+      expect(knight.can_move([:a, 6], board)). to be false
     end
   end
 
@@ -64,10 +64,27 @@ describe Knight do
     let(:knight) { board.get_square [:g, 0] }
     
     it "should be able to move in front of pawn 6 (white)" do
-      expect(knight.can_move([:f, 2])).to be true
+      expect(knight.can_move([:f, 2], board)).to be true
     end
-    it "should move in front of pawn 6(white)" do
+    it "should actually move in front of pawn 6 (white)" do
       expect(knight.move([:f, 2], board)).to eq(1)
+    end
+  end
+end
+
+describe King do
+  let(:board) { Board.new }
+  context "unthreatened king" do
+    let(:king) { board.get_square [:d, 7] }
+    it "shouldn't be threatened there" do
+      expect(king.threatened? board).to be false
+    end
+  end
+
+  context "threatened king" do
+    let(:king) { board.add_piece(King.new [:d, 2], :black) }
+    it "should be threatened there" do
+      expect(king.threatened? board).to be true
     end
   end
 end

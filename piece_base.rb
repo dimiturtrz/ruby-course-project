@@ -73,6 +73,11 @@ module Piece
     false
   end
 
+  def cant_take_own_error
+    p "you can't take your own pieces" if $errors_enabled
+    false
+  end
+
   def get_range(curr, dest)
     curr > dest ? curr.downto(dest).to_a : (curr..dest).to_a
   end
@@ -83,8 +88,8 @@ module Piece
     @moves += 1
   end
 
-  def get_taken
-    @taken = true
+  def get_taken_by(taker)
+    taker.color == @color ? cant_take_own_error : @taken = true
   end
 
   def letter
