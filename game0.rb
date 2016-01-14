@@ -2,6 +2,7 @@ require_relative "errors_setup"
 require_relative "console"
 
 game = Console.new()
+game.start
 
 =begin
 rook = Rook.new([:g, 4], :white)

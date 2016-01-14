@@ -55,7 +55,7 @@ module Piece
     columns = col_range.size > 1 ? col_range.to_a : Array.new(num_range.size, curr_column)
     numbers = num_range.size > 1 ? num_range.to_a : Array.new(col_range.size, @number)
     letters = columns.map {|column| LETTERS[column]}
-    [letters.drop(1), numbers.drop(1)].transpose
+    [letters, numbers].transpose.drop(1)
   end
 
   def direction_error
@@ -83,16 +83,10 @@ module Piece
   end
 
   def move(destination)
-    @last_letter, @letter = @letter, destination.first
-    @last_number, @number = @number, destination.last
+    @letter = destination.first
+    @number = destination.last
     @moves += 1
     self
-  end
-
-  def reverse_move
-    @letter = @last_letter
-    @number = @last_number
-    @moves -= 1
   end
 
   def get_taken_by(taker)

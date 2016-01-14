@@ -77,7 +77,7 @@ class Board
 
   def move piece_str, dest, color
     piece_to_move = @pieces.find do |piece|
-      piece.abbreviation == piece_str && piece.color == color
+      piece.abbreviation == piece_str.upcase && piece.color == color
     end
     piece_to_move.move [dest[0].downcase.to_sym, dest[1].to_i - 1], self
   end

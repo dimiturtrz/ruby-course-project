@@ -67,7 +67,7 @@ describe Knight do
       expect(knight.can_move([:f, 2], board)).to be true
     end
     it "should actually move in front of pawn 6 (white)" do
-      expect(knight.move([:f, 2], board)).to eq(1)
+      expect(knight.move([:f, 2], board).moves).to eq(1)
     end
   end
 end

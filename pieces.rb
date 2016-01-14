@@ -41,7 +41,7 @@ class Pawn
   end
 
   def moving_back?(dest_number)
-    @color == :black ? @number < dest_number : @number > dest_number
+    @color == :black ? @number <= dest_number : @number >= dest_number
   end
 
   def moving_back_error
