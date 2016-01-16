@@ -12,17 +12,21 @@ module Console
   end
 
   def visualize_board(board)
-    board.print
+    puts board
   end
 
   def visualize_winner(color)
     puts "Congrats #{@color.to_s} wins!!!"
   end
 
-  def interface_get_input
+  def visualize_error(message)
+    puts "!!!\nERROR: #{message}\n!!!"
+  end
+
+  def interface_get_input board, color
     input = gets.chomp
     case input
-      when /^move/ then parse_move_input input
+      when /^move/ then parse_move_input input, board, color
       when /^surrender/ then [:surrender]
       when /^save/ then [:save]
       when /^load/ then [:load]
@@ -31,17 +35,14 @@ module Console
     end
   end
 
-  def parse_move_input input
-    piece, dest = input.split(/\s/).drop(1)
+  def parse_move_input(input, board, color)
+    piece_str, dest = input.split(/\s/).drop(1)
     return out_of_field_error unless dest =~ /[a-hA-H][1-8]/
+    piece = board.find_piece piece_str, color
     [:move, piece, dest]
   end
 
   def out_of_field_error
     Error.raise_chess_error "try not to think out of that particular box"
-  end
-
-  def visualize_error(message)
-    puts "!!!\nERROR: #{message}\n!!!"
   end
 end

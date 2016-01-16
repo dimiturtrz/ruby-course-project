@@ -63,6 +63,18 @@ class Board
     @board[coordinates.first][coordinates.last]
   end
 
+  def first_possible_move color
+    Error.disable_errors
+    @pieces.find_all{ |piece| piece.color == color}.each do |piece|
+      ('a'..'h').to_a.each do |letter|
+        (1..8).to_a.each do |number|
+          return if move(piece, [letter, number], color)
+        end
+      end
+    end
+    Error.enable_errors
+  end
+
   def get_king(color)
     @pieces.find{|piece| piece.color == color && piece.kind_of?(King) }
   end
@@ -75,11 +87,14 @@ class Board
     @pieces
   end
 
-  def move piece_str, dest, color
-    piece_to_move = @pieces.find do |piece|
+  def find_piece piece_str, color
+    found_piece = @pieces.find do |piece|
       piece.abbreviation == piece_str.upcase && piece.color == color
     end
-    return no_piece_error unless piece_to_move
+    return found_piece ? found_piece : no_piece_error
+  end
+
+  def move piece_to_move, dest, color
     piece_to_move.move [dest[0].downcase.to_sym, dest[1].to_i - 1], self
   end
 
@@ -104,10 +119,6 @@ class Board
       string += "#{index+1}  #{row.map(&:to_s).join('│')}\n"
     end
     string += "#{' ' * (3 + 1)}#{LETTERS.map(&:upcase).join(' ' * 3)}\n"
-  end
-
-  def print
-    puts to_s
   end
 
   #only for testing !!!

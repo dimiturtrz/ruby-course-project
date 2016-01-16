@@ -17,5 +17,7 @@ DIRECTIONS = [:diagonal, :straight, :both]
 MOVEMENT_LIMITS = [true, false] # true = 1, false = no limits
 # game allowed methods
 GAME_METHODS = [:move, :save, :load, :surrender]
-# modes
-MODES = [:console, :graphical]
+# interfaces
+INTERFACES = [:console, :graphical]
+# players
+PLAYERS = [:vscomputer, :vsplayer]
