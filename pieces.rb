@@ -121,6 +121,7 @@ class Bishop
   def move(dest, board)
     final_square = can_move dest, board
     return false unless final_square
+    puts "here"
     final_square.get_taken_by self if final_square.kind_of? Piece
     super dest
   end
@@ -164,7 +165,9 @@ class King
   end
 
   def threatened?(board)
-    pieces = board.get_pieces.reject{ |piece| piece.color == @color }
+    pieces = board.get_pieces.reject do |piece|
+      piece.color == @color || piece.taken?
+    end
     disable_errors
     threats = pieces.find{ |piece| piece.can_move([@letter, @number], board) }
     enable_errors

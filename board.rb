@@ -1,7 +1,7 @@
 require_relative "constants"
 require_relative "pieces"
 class Board
-  def initialize()
+  def initialize
     @board = Hash.new
     @pieces = Array.new
     place_player_pieces :white
@@ -68,7 +68,7 @@ class Board
   end
 
   def king_threatened?(color)
-    get_king(color).threatened?(self)
+    get_king(color).threatened? self
   end
 
   def get_pieces
@@ -79,7 +79,13 @@ class Board
     piece_to_move = @pieces.find do |piece|
       piece.abbreviation == piece_str.upcase && piece.color == color
     end
+    return no_piece_error unless piece_to_move
     piece_to_move.move [dest[0].downcase.to_sym, dest[1].to_i - 1], self
+  end
+
+  def no_piece_error
+    puts "can't touch this"
+    false
   end
 
   def refresh
