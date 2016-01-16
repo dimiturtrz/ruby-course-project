@@ -1,7 +1,7 @@
 require_relative "errors_setup"
-require_relative "console"
+require_relative "game"
 
-game = Console.new()
+game = Game.new()
 game.start
 
 =begin

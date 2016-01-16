@@ -45,8 +45,7 @@ class Pawn
   end
 
   def moving_back_error
-    p "no moonwalking for pawns!" if $errors_enabled
-    false
+    Error.raise_chess_error "no moonwalking for pawns!"
   end
 
   def no_piece_error
@@ -100,8 +99,7 @@ class Knight
   end
 
   def knight_error
-    p "can't expect all horses to move like the Jagger"  if $errors_enabled
-    false
+    Error.raise_chess_error "can't expect all horses to move like the Jagger"
   end
 end
 
@@ -121,7 +119,6 @@ class Bishop
   def move(dest, board)
     final_square = can_move dest, board
     return false unless final_square
-    puts "here"
     final_square.get_taken_by self if final_square.kind_of? Piece
     super dest
   end
@@ -168,9 +165,9 @@ class King
     pieces = board.get_pieces.reject do |piece|
       piece.color == @color || piece.taken?
     end
-    disable_errors
+    Error.disable_errors
     threats = pieces.find{ |piece| piece.can_move([@letter, @number], board) }
-    enable_errors
+    Error.enable_errors
     !threats.nil?
   end
 end

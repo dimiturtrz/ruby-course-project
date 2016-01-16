@@ -84,8 +84,7 @@ class Board
   end
 
   def no_piece_error
-    puts "can't touch this"
-    false
+    Error.raise_chess_error "can't touch this"
   end
 
   def refresh

@@ -13,5 +13,9 @@ BISHOP_INDENTATION = 2
 QUEEN_INDENTATION = 3
 KING_INDENTATION = 4
 # how can pieces move
-DIRECTIONS = :diagonal, :straight
-MOVEMENT_LIMITS = true, false # true = 1, false = no limits
+DIRECTIONS = [:diagonal, :straight, :both]
+MOVEMENT_LIMITS = [true, false] # true = 1, false = no limits
+# game allowed methods
+GAME_METHODS = [:move, :save, :load, :surrender]
+# modes
+MODES = [:console, :graphical]

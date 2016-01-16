@@ -1,5 +1,7 @@
 require_relative "constants"
 module Piece
+  
+  attr_reader :letter, :number, :color, :abbreviation, :moves
   def initialize(starting_position, color, sign, abbreviation)
     @letter = starting_position.first # coordinates x
     @number = starting_position.last # coordinates y
@@ -59,23 +61,19 @@ module Piece
   end
 
   def direction_error
-    p "wrong direction. ye drunk?" if $errors_enabled
-    false
+    Error.raise_chess_error "wrong direction. ye drunk?"
   end
 
   def limits_error
-    p "that's it, you've crossed the line" if $errors_enabled
-    false
+    Error.raise_chess_error "that's it, you've crossed the line"
   end
 
   def obstruction_error
-    p "nuh-uh theres a bloke in the way" if $errors_enabled
-    false
+    Error.raise_chess_error "nuh-uh theres a bloke in the way"
   end
 
   def cant_take_own_error
-    p "you can't take your own pieces" if $errors_enabled
-    false
+    Error.raise_chess_error "you can't take your own pieces"
   end
 
   def get_range(curr, dest)
@@ -93,28 +91,8 @@ module Piece
     taker.color == @color ? cant_take_own_error : @taken = true
   end
 
-  def letter
-    @letter
-  end
-
-  def number
-    @number
-  end
-
-  def color
-    @color
-  end
-
   def taken?
     @taken
-  end
-  
-  def abbreviation
-    @abbreviation
-  end
-
-  def moves
-    @moves
   end
 end
 
