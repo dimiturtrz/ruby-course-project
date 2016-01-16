@@ -4,7 +4,7 @@ describe Pawn do
   context "some pawn somewhere" do
     let(:pawn) { Pawn.new([:b, 3], :black) }
     before do
-      disable_errors
+      Error.disable_errors
     end
 
     it "should include PluralPiece" do

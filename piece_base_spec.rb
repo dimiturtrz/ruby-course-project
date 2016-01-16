@@ -48,7 +48,7 @@ describe Piece do
         expect(piece.obstructions_check(4, 1, 1, board).to_s).to eq("♟ 2")
       end
       it "should return false if there's a piece in the way" do
-        expect(piece.obstructions_check(4, 0, 0, board)).to be false
+        expect{ piece.obstructions_check 4, 0, 0, board}.to raise_error(ChessError, /nuh-uh theres a bloke in the way/)
       end
     end
   end
