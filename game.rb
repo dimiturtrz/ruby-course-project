@@ -8,18 +8,19 @@ class Game
     @board = Board.new
     @color = :white
     @game_over = false
+    choose_interface
+    choose_players
     init_interface
-    init_players
   end
 
-  def init_interface
+  def choose_interface
     case get_mode(INTERFACES)
       when 1 then self.class.send(:include, Console)
       when 2 then self.class.send(:include, Graphical)
     end
   end
 
-  def init_players
+  def choose_players
     case get_mode(PLAYERS)
       when 1 then @singleplayer = true
       when 2 then @singleplayer = false

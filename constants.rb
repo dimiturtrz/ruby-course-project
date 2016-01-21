@@ -21,3 +21,6 @@ GAME_METHODS = [:move, :save, :load, :surrender]
 INTERFACES = [:console, :graphical]
 # players
 PLAYERS = [:vscomputer, :vsplayer]
+# dimenstions
+DIMENSIONS = { height: 480, width: 640}
+FONT_SIZE = 40

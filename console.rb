@@ -42,6 +42,9 @@ module Console
     [:move, piece, dest]
   end
 
+  def init_interface
+  end
+
   def out_of_field_error
     Error.raise_chess_error "try not to think out of that particular box"
   end
