@@ -1,6 +1,8 @@
 LETTERS = [:a, :b, :c, :d, :e, :f, :g, :h] #columns
 NUMBERS = (1..8).to_a #rows
 COLORS = [:white, :black]
+# all pieces
+PIECES = ["pawn", "rook", "knight", "bishop", "queen", "king"]
 # elites
 ELITES = ["rook", "knight", "bishop"]
 # on which row figures are
@@ -23,4 +25,6 @@ INTERFACES = [:console, :graphical]
 PLAYERS = [:vscomputer, :vsplayer]
 # dimenstions
 DIMENSIONS = { height: 480, width: 640}
+BOARD_X_OFFSET = DIMENSIONS[:width]/12
+BOARD_Y_OFFSET = DIMENSIONS[:width]/15
 FONT_SIZE = 40

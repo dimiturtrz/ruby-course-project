@@ -10,7 +10,7 @@ class Game
     @game_over = false
     choose_interface
     choose_players
-    init_interface
+    init_interface @board
   end
 
   def choose_interface

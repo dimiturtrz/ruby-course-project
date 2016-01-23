@@ -42,7 +42,7 @@ module Console
     [:move, piece, dest]
   end
 
-  def init_interface
+  def init_interface(board)
   end
 
   def out_of_field_error
