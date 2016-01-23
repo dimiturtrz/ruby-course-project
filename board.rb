@@ -87,6 +87,10 @@ class Board
     @pieces
   end
 
+  def get_living_pieces
+    @pieces.reject{|piece| piece.taken?}
+  end
+
   def find_piece piece_str, color
     found_piece = @pieces.find do |piece|
       piece.abbreviation == piece_str.upcase && piece.color == color
@@ -95,6 +99,7 @@ class Board
   end
 
   def move piece_to_move, dest, color
+    x, y = piece_to_move.letter, piece_to_move.number
     piece_to_move.move [dest[0].downcase.to_sym, dest[1].to_i - 1], self
   end
 

@@ -1,40 +1,74 @@
 require_relative 'constants'
+require_relative 'graphical'
 require 'gosu'
 include Gosu
 
 class GameWindow < Window
   def initialize board
     super DIMENSIONS[:width], DIMENSIONS[:height]
-    self.caption = "Gosu Tutorial Game"
+    self.caption = "Gosu Chess"
 
     @board = board
     get_piece_icons
+    @held_piece = false
+  end
 
-    @pointer = Gosu::Image.new self, "icons/pointer.png", true
-    @px = @py = 0
+  def needs_cursor?
+    true
   end
 
   def draw
     dye_background Color::BLUE
     draw_board
     draw_pieces
-    @pointer.draw @px, @py, 0
   end
 	
   def update
-    place_mouse
+    #puts "updatin'"
+    begin
+      meaningful_click = button_down?(Gosu::MsLeft) ? handle_click : false
+      if meaningful_click
+        Graphical.return_input meaningful_click
+        @held_piece = false
+      end
+    rescue ChessError => error
+      Graphical.visualize_error error.message
+    end
   end
 
-  def place_mouse
-    @px = mouse_x
-    @py = mouse_y
+  def handle_click
+    handle_board_click if mouse_in_board?
+  end
+
+  def handle_board_click
+    unless @held_piece
+      @held_piece = grab_piece
+      false
+    else
+      [:move, @held_piece, coordinates_to_index(mouse_x, mouse_y)]
+    end
+  end
+
+  def grab_piece
+    letter, number = coordinates_to_index(mouse_x, mouse_y)
+    piece = @board.get_square [letter, number-1]
+    return not_a_piece_error unless piece.kind_of? Piece
+    return wrong_square_error unless piece.color == Graphical.get_color
+    piece
+  end
+
+  def not_a_piece_error
+    Error.raise_chess_error "pick a piece or get lost"
+  end
+
+  def wrong_square_error
+    Error.raise_chess_error "you can only move your pieces"
   end
 
   def draw_pieces
-    @board.get_pieces.each do |piece|
+    @board.get_living_pieces.each do |piece|
       piece_icon = @piece_icons[get_piece_sym(piece)]
-      x, y = get_piece_coordinates piece
-      puts "x: #{x}, y: #{y}\n"
+      x, y = index_to_coordinates piece.letter, piece.number
       piece_icon.draw x, y ,0
     end
   end
@@ -53,7 +87,8 @@ class GameWindow < Window
     end_y = y + BOARD_X_OFFSET
     end
     8.times do |number|
-      draw_text start_x + ((1+number) * BOARD_X_OFFSET), end_y, LETTERS[number]
+      letter_x = number + 1.25
+      draw_text start_x + (letter_x * BOARD_X_OFFSET), end_y, LETTERS[number]
     end
   end
 
@@ -74,9 +109,19 @@ class GameWindow < Window
     "#{color}_#{rank}".to_sym
   end
 
-  def get_piece_coordinates(piece)
-    column = LETTERS.index piece.letter
-    row = piece.number
+  def mouse_in_board?
+     mouse_in_board_x = (mouse_x/BOARD_X_OFFSET).floor.between?(2, 9)
+     mouse_in_board_y = (mouse_y/BOARD_Y_OFFSET).floor.between?(2, 9)
+     mouse_in_board_x && mouse_in_board_y
+  end
+
+  def coordinates_to_index(x, y)
+    [LETTERS[(x/BOARD_X_OFFSET).floor - 2], (y/BOARD_Y_OFFSET - 1).floor]
+  end
+
+  def index_to_coordinates(letter, number)
+    column = LETTERS.index letter
+    row = number
     [BOARD_X_OFFSET * (2.25 + column), BOARD_Y_OFFSET * (1 + row)]
   end
 
