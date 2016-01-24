@@ -21,6 +21,7 @@ class GameWindow < Window
     dye_background Color::BLUE
     draw_board
     draw_pieces
+    draw_buttons
   end
 	
   def update
@@ -37,7 +38,9 @@ class GameWindow < Window
   end
 
   def handle_click
-    handle_board_click if mouse_in_board?
+    puts @board
+    return handle_board_click if mouse_in_board?
+    return handle_button_click if mouse_on_button?
   end
 
   def handle_board_click
@@ -46,6 +49,14 @@ class GameWindow < Window
       false
     else
       [:move, @held_piece, coordinates_to_index(mouse_x, mouse_y)]
+    end
+  end
+
+  def handle_button_click
+    case (mouse_x/BUTTON_X_OFFSET).floor
+      when 1 then [:save]
+      when 2 then [:load]
+      when 3 then [:surrender]
     end
   end
 
@@ -78,7 +89,7 @@ class GameWindow < Window
     end_y = nil
     (1..8).each do |row|
       y = start_y + (row * BOARD_Y_OFFSET)
-      draw_text start_x, y, row
+      draw_text start_x, y, row, 40
       (1..8).each do |cell|
         x = start_x + (cell * BOARD_X_OFFSET)
         col = (row + cell).even? ? Color::BLACK : Color::WHITE
@@ -88,7 +99,17 @@ class GameWindow < Window
     end
     8.times do |number|
       letter_x = number + 1.25
-      draw_text start_x + (letter_x * BOARD_X_OFFSET), end_y, LETTERS[number]
+      draw_text start_x + (letter_x * BOARD_X_OFFSET), end_y, LETTERS[number], 40
+    end
+  end
+
+  def draw_buttons
+    texts = ["save", "load", "surrender"]
+    3.times do |time|
+      begining = [(time + 1) * BUTTON_X_OFFSET, BUTTON_Y_OFFSET]
+      ending = [BUTTON_X_OFFSET - 1, BUTTON_Y_OFFSET]
+      draw_rect *begining, *ending, Color::GREEN
+      draw_text *begining, texts[time], BUTTONS_FONT_SIZE
     end
   end
 
@@ -115,6 +136,12 @@ class GameWindow < Window
      mouse_in_board_x && mouse_in_board_y
   end
 
+  def mouse_on_button?
+     mouse_on_button_x = (mouse_x/BUTTON_X_OFFSET).floor.between?(1, 3)
+     mouse_on_button_y = mouse_y.between? BUTTON_Y_OFFSET, BUTTON_Y_OFFSET * 2
+     mouse_on_button_x && mouse_on_button_y
+  end
+
   def coordinates_to_index(x, y)
     [LETTERS[(x/BOARD_X_OFFSET).floor - 2], (y/BOARD_Y_OFFSET - 1).floor]
   end
@@ -125,8 +152,8 @@ class GameWindow < Window
     [BOARD_X_OFFSET * (2.25 + column), BOARD_Y_OFFSET * (1 + row)]
   end
 
-  def draw_text(x, y, text)
-    @message = Gosu::Image.from_text self, text, Gosu.default_font_name, FONT_SIZE
+  def draw_text(x, y, text, font_size)
+    @message = Gosu::Image.from_text self, text, Gosu.default_font_name, COORDS_FONT_SIZE
     @message.draw x, y, 0
   end
 

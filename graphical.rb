@@ -4,9 +4,8 @@ Thread.abort_on_exception=true
 module Graphical
   def init_interface(board)
     @@game = GameWindow.new board
-    @@game_thread = Thread.new do
-      @@game.show
-    end
+    @@game_thread = Thread.new { @@game.show }
+    Thread.main.priority = -4
 
     @@pending_input = false
     @@output = nil
@@ -21,6 +20,10 @@ module Graphical
 
   def visualize_error(message)
     puts message
+  end
+
+  def visualize_winner(color)
+    puts "congrats #{color} wins\n"
   end
 
   def self.return_input(input)

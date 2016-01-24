@@ -13,6 +13,7 @@ module Piece
   end
 
   def can_move(dest_letter, dest_number, move_pattern, limited, board)
+    return false if @letter == dest_letter && @number == dest_number
     curr_column = LETTERS.index @letter
     dest_column = LETTERS.index dest_letter
     unless direction_check curr_column, dest_column, dest_number, move_pattern

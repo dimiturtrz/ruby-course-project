@@ -25,6 +25,12 @@ INTERFACES = [:console, :graphical]
 PLAYERS = [:vscomputer, :vsplayer]
 # dimenstions
 DIMENSIONS = { height: 480, width: 640}
+
 BOARD_X_OFFSET = DIMENSIONS[:width]/12
-BOARD_Y_OFFSET = DIMENSIONS[:width]/15
-FONT_SIZE = 40
+BOARD_Y_OFFSET = DIMENSIONS[:height]/12
+
+BUTTON_X_OFFSET = DIMENSIONS[:width]/5
+BUTTON_Y_OFFSET = DIMENSIONS[:height]/20
+
+COORDS_FONT_SIZE = 40
+BUTTONS_FONT_SIZE = 25
