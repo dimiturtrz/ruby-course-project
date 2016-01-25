@@ -5,7 +5,7 @@ module Graphical
   def init_interface(board)
     @@game = GameWindow.new board
     @@game_thread = Thread.new { @@game.show }
-    Thread.main.priority = -4
+    @@board = board
 
     @@pending_input = false
     @@output = nil
@@ -26,6 +26,14 @@ module Graphical
     puts "congrats #{color} wins\n"
   end
 
+  def after_load
+    @@game.swap_board @board
+  end
+
+  def after_load
+    puts "saved"
+  end
+
   def self.return_input(input)
     @@pending_input = true
     @@output = input
@@ -33,7 +41,7 @@ module Graphical
 
   def interface_get_input(board, color)
     @@color = color
-    loop { break if @@pending_input }
+    loop { @@pending_input ? break : sleep(0.3) }
     @@pending_input = false
     @@output
   end

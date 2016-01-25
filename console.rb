@@ -45,6 +45,12 @@ module Console
   def init_interface(board)
   end
 
+  def after_load
+  end
+
+  def after_save
+  end
+
   def out_of_field_error
     Error.raise_chess_error "try not to think out of that particular box"
   end

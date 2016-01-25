@@ -25,11 +25,22 @@ class GameWindow < Window
   end
 	
   def update
-    #puts "updatin'"
+  end
+
+  def swap_board(board)
+    @board = board
+  end
+
+  def button_down(id)
+    case id
+      when Gosu::MsLeft then init_handle_click
+    end
+  end
+
+  def init_handle_click
     begin
-      meaningful_click = button_down?(Gosu::MsLeft) ? handle_click : false
-      if meaningful_click
-        Graphical.return_input meaningful_click
+      if handle_click
+        Graphical.return_input handle_click
         @held_piece = false
       end
     rescue ChessError => error
@@ -38,7 +49,6 @@ class GameWindow < Window
   end
 
   def handle_click
-    puts @board
     return handle_board_click if mouse_in_board?
     return handle_button_click if mouse_on_button?
   end

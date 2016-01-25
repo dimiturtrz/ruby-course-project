@@ -124,11 +124,13 @@ class Game
   def save_to_file
     data = [@board, @turns, @color]
     File.open("save", 'w') { |file| file.write Marshal.dump data }
+    after_save
     false
   end
 
   def load_from_file
     @board, @turns, @color = Marshal.load(File.binread("save"))
+    after_load
     false
   end
 end
