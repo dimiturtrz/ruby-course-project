@@ -1,11 +1,14 @@
 #ruby-chess
 
-A desktop application that simulates the game ["chess"](https://en.wikipedia.org/wiki/Chess)
+A desktop application that simulates ["chess"](https://en.wikipedia.org/wiki/Chess)
 Made for the ruby course in The Faculty of Mathematics and Informatics of Sofia University (FMI)
 
 ##Summary
 
-The game has two usable interfaces - console and graphical(using Gosu) interface. The game can be played against another player on the same computer or with a mentally challenged AI. There is a save/load functionality.
+What you'd expect from a game of chess - you move pieces and "check" the enemy king until he can't run anywhere.
+The game has two interfaces - console and graphical(using Gosu).
+The game can be played against another player on the same computer or with a mentally challenged AI.
+There is a save/load functionality.
 
 ##Installation
 
