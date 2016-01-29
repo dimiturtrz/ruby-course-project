@@ -36,6 +36,11 @@ In the console interface you play by typing commands in your console. They are:
 - to save/load: ``` save ``` to save and ```load``` to load game state
 - to surrender: ``` surrender ``` - ends the game and opponent wins
 
+### Graphical
+In the graphical interface things are much easier:
+- to move a piece click the piece and then click the destination
+- to save/load/surrender click one of the buttons above the board
+
 ##Tests
 To run full tests run ``` rspec full_spec.rb --colour --format documentation ```
 To test the separate features run rspec for the other spec files 
