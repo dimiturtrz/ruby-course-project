@@ -19,7 +19,11 @@ module Graphical
   end
 
   def visualize_error(message)
-    puts message
+    Thread.new do
+      @@game.set_error message
+      sleep(ERROR_DURATION)
+      @@game.set_error ""
+    end
   end
 
   def visualize_winner(color)
@@ -30,7 +34,7 @@ module Graphical
     @@game.swap_board @board
   end
 
-  def after_load
+  def after_save
     puts "saved"
   end
 

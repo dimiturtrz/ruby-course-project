@@ -11,6 +11,7 @@ class GameWindow < Window
     @board = board
     get_piece_icons
     @held_piece = false
+    @error = ""
   end
 
   def needs_cursor?
@@ -22,6 +23,7 @@ class GameWindow < Window
     draw_board
     draw_pieces
     draw_buttons
+    draw_errors
   end
 	
   def update
@@ -29,6 +31,10 @@ class GameWindow < Window
 
   def swap_board(board)
     @board = board
+  end
+
+  def set_error(message)
+    @error = message
   end
 
   def button_down(id)
@@ -123,6 +129,10 @@ class GameWindow < Window
     end
   end
 
+  def draw_errors
+    draw_text ERROR_X_OFFSET, ERROR_Y_OFFSET, @error, ERRORS_FONT_SIZE
+  end
+
   def get_piece_icons
     @piece_icons = Hash.new
     COLORS.each do |color|
@@ -163,7 +173,7 @@ class GameWindow < Window
   end
 
   def draw_text(x, y, text, font_size)
-    @message = Gosu::Image.from_text self, text, Gosu.default_font_name, COORDS_FONT_SIZE
+    @message = Gosu::Image.from_text self, text, Gosu.default_font_name, font_size
     @message.draw x, y, 0
   end
 
